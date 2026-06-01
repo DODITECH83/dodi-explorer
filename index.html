@@ -65,6 +65,12 @@
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </button>
+        <button class="icon-btn" id="btn-settings" aria-label="Impostazioni">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
       </div>
     </header>
 
@@ -318,6 +324,348 @@
     <div class="install-btns">
       <button id="install-btn" class="install-yes">Installa</button>
       <button id="install-no" class="install-dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- ==================== SETTINGS PANEL ==================== -->
+  <div id="settings-panel" class="side-panel hidden">
+    <div class="side-panel-backdrop" id="settings-backdrop"></div>
+    <div class="side-panel-sheet">
+      <div class="side-panel-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Impostazioni
+        </h2>
+        <button class="side-panel-close" id="settings-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="side-panel-body">
+
+        <!-- SEZIONE ASPETTO -->
+        <div class="settings-section">
+          <div class="settings-section-title">🎨 Aspetto</div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Tema</span>
+              <span class="setting-desc">Scegli lo stile visivo dell'app</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-theme">
+                <option value="dark">🌙 Scuro</option>
+                <option value="light">☀️ Chiaro</option>
+                <option value="forest">🌲 Foresta</option>
+                <option value="ocean">🌊 Oceano</option>
+                <option value="desert">🏜️ Deserto</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Colore Accento</span>
+              <span class="setting-desc">Colore principale dell'interfaccia</span>
+            </div>
+            <div class="setting-control color-swatches" id="set-accent">
+              <button class="swatch active" data-color="#4ade80" style="background:#4ade80" title="Verde"></button>
+              <button class="swatch" data-color="#60a5fa" style="background:#60a5fa" title="Blu"></button>
+              <button class="swatch" data-color="#f59e0b" style="background:#f59e0b" title="Ambra"></button>
+              <button class="swatch" data-color="#f472b6" style="background:#f472b6" title="Rosa"></button>
+              <button class="swatch" data-color="#a78bfa" style="background:#a78bfa" title="Viola"></button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Dimensione testo</span>
+              <span class="setting-desc">Adatta la leggibilità dello schermo</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-fontsize">
+                <option value="small">Piccolo</option>
+                <option value="medium" selected>Normale</option>
+                <option value="large">Grande</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Animazioni</span>
+              <span class="setting-desc">Transizioni e effetti visivi</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-animations" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SEZIONE MAPPA -->
+        <div class="settings-section">
+          <div class="settings-section-title">🗺️ Mappa</div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Stile mappa</span>
+              <span class="setting-desc">Tipo di visualizzazione cartografica</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-mapstyle">
+                <option value="dark">Scuro (CartoCDN)</option>
+                <option value="light">Chiaro (CartoCDN)</option>
+                <option value="topo">Topografico (OSM)</option>
+                <option value="satellite">Satelite (ESRI)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Raggio default</span>
+              <span class="setting-desc">Distanza iniziale di ricerca</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-radius">
+                <option value="2">2 km</option>
+                <option value="5" selected>5 km</option>
+                <option value="10">10 km</option>
+                <option value="20">20 km</option>
+                <option value="50">50 km</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Mostra cluster pin</span>
+              <span class="setting-desc">Raggruppa i marker vicini</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-cluster" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Segui posizione</span>
+              <span class="setting-desc">Centra la mappa mentre ti sposti</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-follow" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SEZIONE ESPLORAZIONE -->
+        <div class="settings-section">
+          <div class="settings-section-title">🧭 Esplorazione</div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Lingua Wikipedia</span>
+              <span class="setting-desc">Lingua delle descrizioni dei luoghi</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-wikilang">
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="es">🇪🇸 Español</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Categorie default</span>
+              <span class="setting-desc">Filtro attivo all'avvio</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-defcat">
+                <option value="all">🌍 Tutti</option>
+                <option value="historic">🏛️ Storico</option>
+                <option value="nature">🌿 Natura</option>
+                <option value="viewpoint">🔭 Panorami</option>
+                <option value="hidden">💎 Gemme</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Notifiche luoghi</span>
+              <span class="setting-desc">Avvisi quando sei vicino a un POI</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-notify" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Unità di misura</span>
+              <span class="setting-desc">Come visualizzare le distanze</span>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="set-units">
+                <option value="metric">km / m</option>
+                <option value="imperial">mi / ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEZIONE PRIVACY & DATI -->
+        <div class="settings-section">
+          <div class="settings-section-title">🔒 Privacy & Dati</div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Salva cronologia</span>
+              <span class="setting-desc">Ricorda i luoghi visualizzati</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-history" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Cache offline</span>
+              <span class="setting-desc">Salva dati per uso senza internet</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="set-cache" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Cancella preferiti</span>
+              <span class="setting-desc">Rimuovi tutti i luoghi salvati</span>
+            </div>
+            <button class="setting-danger-btn" id="set-clear-favs">Cancella</button>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Reset impostazioni</span>
+              <span class="setting-desc">Ripristina tutto ai valori di fabbrica</span>
+            </div>
+            <button class="setting-danger-btn" id="set-reset">Reset</button>
+          </div>
+        </div>
+
+        <!-- FOOTER SETTINGS -->
+        <div class="settings-footer">
+          <button class="settings-about-btn" id="btn-open-about">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Chi siamo & Info app
+          </button>
+          <p class="settings-ver">DODI Explorer v1.0.0 · Developed by Adry Doditech</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ABOUT PANEL ==================== -->
+  <div id="about-panel" class="side-panel hidden">
+    <div class="side-panel-backdrop" id="about-backdrop"></div>
+    <div class="side-panel-sheet">
+      <div class="side-panel-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Info & Sviluppatore
+        </h2>
+        <button class="side-panel-close" id="about-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="side-panel-body">
+
+        <!-- APP HERO -->
+        <div class="about-hero">
+          <div class="about-app-icon">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#4ade80"/>
+              <circle cx="12" cy="9" r="2.5" fill="#1a3a2a"/>
+            </svg>
+          </div>
+          <h2 class="about-app-name">DODI Explorer</h2>
+          <div class="about-version-badge">v1.0.0 · Stable</div>
+          <p class="about-tagline">Local Discovery Platform</p>
+        </div>
+
+        <!-- COME FUNZIONA -->
+        <div class="about-section">
+          <h3 class="about-section-title">⚙️ Come funziona</h3>
+          <div class="about-text">
+            <p>DODI Explorer utilizza la geolocalizzazione HTML5 del dispositivo per determinare la posizione dell'utente in tempo reale. Tramite una query dinamica all'<strong>Overpass API</strong> — l'API di interrogazione del database OpenStreetMap — vengono recuperati tutti i punti di interesse (POI) entro il raggio configurato.</p>
+            <p>Le descrizioni dei luoghi sono alimentate dall'<strong>API di Wikipedia</strong> in modalità CORS-free, con caching locale per ridurre le richieste e garantire la disponibilità offline. La geocodifica inversa e la ricerca testuale sono gestite da <strong>Nominatim</strong>, il motore di ricerca geografica di OpenStreetMap.</p>
+            <p>La cartografia è renderizzata tramite <strong>Leaflet.js</strong> su tile CartoCDN e OpenStreetMap, con supporto a più stili visuali. L'intera applicazione è una <strong>Progressive Web App</strong> installabile su qualsiasi dispositivo, con Service Worker per la gestione della cache e il funzionamento offline.</p>
+          </div>
+        </div>
+
+        <!-- STACK TECNICO -->
+        <div class="about-section">
+          <h3 class="about-section-title">🛠️ Stack Tecnologico</h3>
+          <div class="tech-grid">
+            <div class="tech-item"><span class="tech-badge">Frontend</span>HTML5 · CSS3 · JavaScript ES2022</div>
+            <div class="tech-item"><span class="tech-badge">Mappe</span>Leaflet.js 1.9.4</div>
+            <div class="tech-item"><span class="tech-badge">Dati geo</span>OpenStreetMap · Overpass API</div>
+            <div class="tech-item"><span class="tech-badge">Contenuti</span>Wikipedia REST API</div>
+            <div class="tech-item"><span class="tech-badge">Geocoding</span>Nominatim OSM</div>
+            <div class="tech-item"><span class="tech-badge">PWA</span>Service Worker · Web Manifest</div>
+            <div class="tech-item"><span class="tech-badge">Hosting</span>GitHub Pages (HTTPS)</div>
+            <div class="tech-item"><span class="tech-badge">Costo</span>€0 — 100% Open Source</div>
+          </div>
+        </div>
+
+        <!-- DEVELOPER -->
+        <div class="about-section">
+          <h3 class="about-section-title">👨‍💻 Sviluppatore</h3>
+          <div class="dev-card">
+            <div class="dev-avatar">AD</div>
+            <div class="dev-info">
+              <div class="dev-name">Adry Doditech</div>
+              <div class="dev-role">Mobile & Web Developer</div>
+              <div class="dev-bio">
+                Appassionato di tecnologia, sviluppo mobile e scoperta del territorio. DODI Explorer nasce dalla visione di rendere l'esplorazione locale accessibile a tutti, senza barriere economiche, usando esclusivamente tecnologie open-source e API gratuite.
+              </div>
+              <div class="dev-links">
+                <a class="dev-link" href="https://github.com/DODITECH83" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  GitHub
+                </a>
+                <a class="dev-link" href="https://doditech83.github.io/dodi-explorer/" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  Live App
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LICENZA -->
+        <div class="about-section">
+          <h3 class="about-section-title">📄 Licenza & Credits</h3>
+          <div class="about-text">
+            <p>DODI Explorer è rilasciato sotto licenza <strong>MIT</strong>. Il codice sorgente è liberamente consultabile, modificabile e distribuibile citando l'autore originale.</p>
+            <p>Dati geografici © <strong>OpenStreetMap contributors</strong> (ODbL). Tiles © <strong>CARTO</strong>. Contenuti enciclopedici © <strong>Wikipedia contributors</strong> (CC BY-SA).</p>
+          </div>
+          <div class="about-copy">© 2024 Adry Doditech · DODI Explorer · MIT License</div>
+        </div>
+
+      </div>
     </div>
   </div>
 
