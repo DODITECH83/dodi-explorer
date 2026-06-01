@@ -1,0 +1,46 @@
+{
+  "name": "DODI Explorer — Local Discovery",
+  "short_name": "DODI Explorer",
+  "description": "Scopri luoghi nascosti, attrazioni e meraviglie vicino a te. Powered by OpenStreetMap.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1a3a2a",
+  "background_color": "#0d1f16",
+  "lang": "it",
+  "categories": ["travel", "navigation", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cerca vicino a me",
+      "short_name": "Esplora",
+      "description": "Trova luoghi interessanti ora",
+      "url": "/?action=explore",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Gemme Nascoste",
+      "short_name": "Gemme",
+      "description": "Scopri i luoghi segreti",
+      "url": "/?tab=gems",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

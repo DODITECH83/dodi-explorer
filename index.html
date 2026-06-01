@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a3a2a" />
+  <meta name="description" content="Scopri luoghi nascosti, attrazioni e meraviglie vicino a te" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DODI Explorer" />
+  <title>DODI Explorer</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="theme-dark">
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" stroke="#4ade80" stroke-width="2" opacity="0.3"/>
+          <path d="M32 8C21.5 8 13 16.5 13 27c0 14.5 19 29 19 29s19-14.5 19-29c0-10.5-8.5-19-19-19z" fill="#4ade80" opacity="0.9"/>
+          <circle cx="32" cy="27" r="6" fill="#1a3a2a"/>
+          <path d="M20 48 Q32 56 44 48" stroke="#4ade80" stroke-width="1.5" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
+      <h1 class="splash-title">DODI Explorer</h1>
+      <p class="splash-sub">Scopri il mondo intorno a te</p>
+      <div class="splash-loader">
+        <div class="splash-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="app" class="app hidden">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="logo-mark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#4ade80"/>
+            <circle cx="12" cy="9" r="2.5" fill="#1a3a2a"/>
+          </svg>
+        </div>
+        <span class="topbar-title">DODI Explorer</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="btn-theme" aria-label="Cambia tema">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-favorites" aria-label="Preferiti">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- SEARCH BAR -->
+    <div class="search-container">
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Cerca un luogo o zona..." autocomplete="off" />
+        <button class="search-locate" id="btn-locate" aria-label="Localizzami">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- FILTER CHIPS -->
+    <div class="filters-scroll">
+      <div class="filters">
+        <button class="chip active" data-filter="all">🌍 Tutti</button>
+        <button class="chip" data-filter="historic">🏛️ Storico</button>
+        <button class="chip" data-filter="nature">🌿 Natura</button>
+        <button class="chip" data-filter="viewpoint">🔭 Panorami</button>
+        <button class="chip" data-filter="hidden">💎 Gemme</button>
+        <button class="chip" data-filter="food">🍽️ Cibo</button>
+        <button class="chip" data-filter="adventure">🥾 Avventura</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- MAP TAB -->
+      <div id="tab-map" class="tab-content active">
+        <div id="map" class="map-container"></div>
+        <div class="map-controls">
+          <button class="map-btn" id="btn-random" title="Esplorazione casuale">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+              <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+            </svg>
+          </button>
+          <button class="map-btn" id="btn-my-location" title="La mia posizione">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+            </svg>
+          </button>
+        </div>
+        <div id="radius-control" class="radius-control">
+          <label>Raggio: <span id="radius-val">5</span> km</label>
+          <input type="range" id="radius-slider" min="1" max="50" value="5" />
+        </div>
+      </div>
+
+      <!-- EXPLORE TAB -->
+      <div id="tab-explore" class="tab-content">
+        <div class="section-header">
+          <h2>Vicino a te</h2>
+          <span id="places-count" class="badge">— luoghi</span>
+        </div>
+        <div id="places-grid" class="places-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Attivando la geolocalizzazione…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- HIDDEN GEMS TAB -->
+      <div id="tab-gems" class="tab-content">
+        <div class="gems-header">
+          <div class="gems-hero">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.5">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <h2>Gemme Nascoste</h2>
+            <p>Luoghi segreti che solo i locali conoscono</p>
+          </div>
+        </div>
+        <div id="gems-grid" class="places-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Caricamento gemme nascoste…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUTES TAB -->
+      <div id="tab-routes" class="tab-content">
+        <h2 class="section-title">Percorsi Consigliati</h2>
+        <div class="routes-list">
+          <div class="route-card" data-type="walking">
+            <div class="route-icon">🚶</div>
+            <div class="route-info">
+              <h3>A piedi</h3>
+              <p>Percorsi pedonali nei borghi e centri storici</p>
+              <span class="route-tag">2–5 km</span>
+            </div>
+            <button class="route-btn" onclick="app.startRoute('walking')">Inizia</button>
+          </div>
+          <div class="route-card" data-type="cycling">
+            <div class="route-icon">🚴</div>
+            <div class="route-info">
+              <h3>In bici</h3>
+              <p>Cicloturismo tra natura e panorami</p>
+              <span class="route-tag">10–30 km</span>
+            </div>
+            <button class="route-btn" onclick="app.startRoute('cycling')">Inizia</button>
+          </div>
+          <div class="route-card" data-type="motorcycle">
+            <div class="route-icon">🏍️</div>
+            <div class="route-info">
+              <h3>In moto</h3>
+              <p>Strade panoramiche e curve mozzafiato</p>
+              <span class="route-tag">30–100 km</span>
+            </div>
+            <button class="route-btn" onclick="app.startRoute('motorcycle')">Inizia</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAVORITES TAB -->
+      <div id="tab-favs" class="tab-content">
+        <h2 class="section-title">I tuoi Preferiti</h2>
+        <div id="favs-grid" class="places-grid">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <p>Nessun preferito ancora.<br/>Esplora e salva i tuoi posti del cuore!</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="map">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+          <line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
+        </svg>
+        <span>Mappa</span>
+      </button>
+      <button class="nav-btn" data-tab="explore">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+        </svg>
+        <span>Esplora</span>
+      </button>
+      <button class="nav-btn" data-tab="gems">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span>Gemme</span>
+      </button>
+      <button class="nav-btn" data-tab="routes">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 17l6-10 4 6 3-4 5 8"/>
+        </svg>
+        <span>Percorsi</span>
+      </button>
+      <button class="nav-btn" data-tab="favs">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <span>Preferiti</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- PLACE DETAIL MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-sheet" id="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-img-wrapper">
+        <img id="modal-img" src="" alt="" loading="lazy" />
+        <div class="modal-img-overlay"></div>
+        <button class="modal-close" id="modal-close" aria-label="Chiudi">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <button class="modal-fav" id="modal-fav" aria-label="Aggiungi ai preferiti">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-category" id="modal-cat"></div>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-meta">
+          <span class="meta-item" id="modal-dist">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            —
+          </span>
+          <span class="meta-item" id="modal-coords">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            —
+          </span>
+        </div>
+        <div class="modal-desc" id="modal-desc">
+          <div class="spinner small"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="action-btn primary" id="modal-navigate">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+            </svg>
+            Naviga
+          </button>
+          <button class="action-btn" id="modal-share">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            Condividi
+          </button>
+          <button class="action-btn" id="modal-wiki">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Wikipedia
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- INSTALL BANNER -->
+  <div id="install-banner" class="install-banner hidden">
+    <div class="install-content">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#4ade80" opacity="0.3"/>
+        <circle cx="12" cy="9" r="2.5" fill="#4ade80"/>
+      </svg>
+      <div>
+        <strong>Installa DODI Explorer</strong>
+        <p>Aggiungila alla tua schermata home</p>
+      </div>
+    </div>
+    <div class="install-btns">
+      <button id="install-btn" class="install-yes">Installa</button>
+      <button id="install-no" class="install-dismiss">✕</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
