@@ -735,3 +735,221 @@ class DODIExplorer {
 window.addEventListener('DOMContentLoaded', () => {
   window.app = new DODIExplorer();
 });
+
+// ============================================================
+// SETTINGS MANAGER
+// ============================================================
+class SettingsManager {
+  constructor(appRef) {
+    this.app = appRef;
+    this.defaults = {
+      theme: 'dark',
+      accent: '#4ade80',
+      fontsize: 'medium',
+      animations: true,
+      mapstyle: 'dark',
+      radius: 5,
+      cluster: true,
+      follow: false,
+      wikilang: 'it',
+      defcat: 'all',
+      notify: false,
+      units: 'metric',
+      history: true,
+      cache: true,
+    };
+    this.current = this._load();
+    this._apply();
+    this._bindUI();
+    this._populateUI();
+  }
+
+  _load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('dodi_settings') || '{}');
+      return { ...this.defaults, ...saved };
+    } catch { return { ...this.defaults }; }
+  }
+
+  save() {
+    localStorage.setItem('dodi_settings', JSON.stringify(this.current));
+  }
+
+  _apply() {
+    const s = this.current;
+    const body = document.body;
+
+    // Theme
+    body.className = '';
+    body.classList.add(`theme-${s.theme === 'light' ? 'light' : s.theme === 'forest' ? 'forest' : s.theme === 'ocean' ? 'ocean' : s.theme === 'desert' ? 'desert' : 'dark'}`);
+
+    // Accent color
+    document.documentElement.style.setProperty('--accent', s.accent);
+    document.documentElement.style.setProperty('--green', s.accent);
+
+    // Font size
+    body.classList.remove('font-small', 'font-large');
+    if (s.fontsize === 'small') body.classList.add('font-small');
+    if (s.fontsize === 'large') body.classList.add('font-large');
+
+    // Animations
+    body.classList.toggle('no-animations', !s.animations);
+
+    // Map style
+    if (this.app?.map && this.app?.tileLayer) {
+      this.app.map.removeLayer(this.app.tileLayer);
+      const tiles = {
+        dark:      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        light:     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        topo:      'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      };
+      this.app.tileLayer = L.tileLayer(tiles[s.mapstyle] || tiles.dark, {
+        attribution: CONFIG.mapAttrib, subdomains: 'abcd', maxZoom: 19,
+      }).addTo(this.app.map);
+      this.app.tileLayer.bringToBack();
+    }
+
+    // Default radius
+    if (this.app && !this.app._settingsApplied) {
+      this.app.radius = s.radius * 1000;
+      const slider = document.getElementById('radius-slider');
+      const val = document.getElementById('radius-val');
+      if (slider) slider.value = s.radius;
+      if (val) val.textContent = s.radius;
+    }
+
+    // Default category
+    if (this.app && s.defcat !== 'all' && !this.app._settingsApplied) {
+      this.app.activeFilter = s.defcat;
+      document.querySelectorAll('.chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.filter === s.defcat);
+      });
+    }
+
+    // Wiki language
+    if (this.app) CONFIG.wikiItUrl = `https://${s.wikilang}.wikipedia.org/w/api.php`;
+
+    this.app._settingsApplied = true;
+  }
+
+  _populateUI() {
+    const s = this.current;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = val; };
+
+    set('set-theme', s.theme);
+    set('set-fontsize', s.fontsize);
+    set('set-mapstyle', s.mapstyle);
+    set('set-radius', s.radius);
+    set('set-wikilang', s.wikilang);
+    set('set-defcat', s.defcat);
+    set('set-units', s.units);
+    setChk('set-animations', s.animations);
+    setChk('set-cluster', s.cluster);
+    setChk('set-follow', s.follow);
+    setChk('set-notify', s.notify);
+    setChk('set-history', s.history);
+    setChk('set-cache', s.cache);
+
+    // Accent swatches
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.classList.toggle('active', sw.dataset.color === s.accent);
+    });
+  }
+
+  _bindUI() {
+    // Generic select change
+    const selects = ['set-theme','set-fontsize','set-mapstyle','set-radius','set-wikilang','set-defcat','set-units'];
+    selects.forEach(id => {
+      document.getElementById(id)?.addEventListener('change', (e) => {
+        const key = id.replace('set-', '');
+        this.current[key] = id === 'set-radius' ? +e.target.value : e.target.value;
+        this.save();
+        this._apply();
+        if (id === 'set-mapstyle') this.app?._showToast('🗺️ Stile mappa aggiornato', 'success');
+      });
+    });
+
+    // Toggles
+    const toggles = ['set-animations','set-cluster','set-follow','set-notify','set-history','set-cache'];
+    toggles.forEach(id => {
+      document.getElementById(id)?.addEventListener('change', (e) => {
+        const key = id.replace('set-', '');
+        this.current[key] = e.target.checked;
+        this.save();
+        this._apply();
+      });
+    });
+
+    // Accent swatches
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        this.current.accent = sw.dataset.color;
+        this.save();
+        this._apply();
+        this.app?._showToast('🎨 Colore aggiornato!', 'success');
+      });
+    });
+
+    // Panel open/close
+    document.getElementById('btn-settings')?.addEventListener('click', () => this._openPanel('settings'));
+    document.getElementById('settings-close')?.addEventListener('click', () => this._closePanel('settings'));
+    document.getElementById('settings-backdrop')?.addEventListener('click', () => this._closePanel('settings'));
+
+    document.getElementById('btn-open-about')?.addEventListener('click', () => {
+      this._closePanel('settings');
+      setTimeout(() => this._openPanel('about'), 150);
+    });
+    document.getElementById('about-close')?.addEventListener('click', () => this._closePanel('about'));
+    document.getElementById('about-backdrop')?.addEventListener('click', () => this._closePanel('about'));
+
+    // Danger actions
+    document.getElementById('set-clear-favs')?.addEventListener('click', () => {
+      if (confirm('Eliminare tutti i preferiti?')) {
+        localStorage.removeItem('dodi_favorites');
+        this.app.favorites = [];
+        this.app._renderFavorites();
+        this.app?._showToast('🗑️ Preferiti eliminati', 'success');
+      }
+    });
+
+    document.getElementById('set-reset')?.addEventListener('click', () => {
+      if (confirm('Ripristinare tutte le impostazioni ai valori di fabbrica?')) {
+        this.current = { ...this.defaults };
+        this.save();
+        this._apply();
+        this._populateUI();
+        this.app?._showToast('✅ Impostazioni ripristinate', 'success');
+      }
+    });
+  }
+
+  _openPanel(name) {
+    document.getElementById(`${name}-panel`)?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  _closePanel(name) {
+    document.getElementById(`${name}-panel`)?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+// ============================================================
+// PATCH DODIExplorer to init SettingsManager after map init
+// ============================================================
+const _origInit = DODIExplorer.prototype._init;
+DODIExplorer.prototype._init = async function() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW:', err));
+  }
+  await this._sleep(CONFIG.splashDuration);
+  this._showApp();
+  this._setupEventListeners();
+  this._initMap();
+  // Init settings AFTER map is ready
+  this.settings = new SettingsManager(this);
+  await this._locateUser();
+};
